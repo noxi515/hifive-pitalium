@@ -7,11 +7,27 @@
     <groupId>com.htmlhifive</groupId>
     <artifactId>pitalium</artifactId>
     <version>1.1.1</version>
+    <packaging>jar</packaging>
+
+    <name>pitalium</name>
+    <url>https://github.com/noxi515/hifive-pitalium</url>
 
     <properties>
         <java.version>1.7</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <github.global.server>github</github.global.server>
+        <github.global.repositoryOwner>noxi515</github.global.repositoryOwner>
+        <github.global.repositoryName>hifive-pitalium</github.global.repositoryName>
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>internal.repos</id>
+            <name>Temporary Staging Repository</name>
+            <url>file://${project.build.directory}/mvn-repo</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -80,8 +96,33 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
+
+            <!-- Github maven repository -->
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.12</version>
+                <configuration>
+                    <message>Maven artifacts for ${project.version}</message>
+                    <noJekyll>true</noJekyll>
+                    <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
+                    <branch>refs/heads/mvn-repo</branch>
+                    <includes>
+                        <include>**/*</include>
+                    </includes>
+                    <repositoryName>${github.global.repositoryName}</repositoryName>
+                    <repositoryOwner>${github.global.repositoryOwner}</repositoryOwner>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-
 
 </project>
